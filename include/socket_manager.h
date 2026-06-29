@@ -3,7 +3,7 @@
 #include<ws2tcpip.h>
 #include<iostream>
 #pragma comment(lib, "ws2_32.lib")
-class socketManager{
+class SocketManager{
     private: 
     SOCKET SocketManager;
     public:
