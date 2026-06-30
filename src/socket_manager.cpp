@@ -4,7 +4,7 @@ bool SocketManager :: initialize(){
     WSADATA wsaData;
     int result = WSAStartup(MAKEWORD(2,2),&wsaData);
     if(result !=0){
-        std:: cout<<"WSASTARTUP failed\n";
+        cout<<"WSASTARTUP failed\n";
         return false;
     } 
     std::cout<<"Winsock initialized successfully \n";
@@ -21,5 +21,17 @@ bool SocketManager :: createSocket(){
         return false;
     }
     cout<<"Socket created successfully"<<endl;
+    return true;
+}
+bool SocketManager :: bindSocket(){
+    sockaddr_in serverAddress;
+    serverAddress.sin_family = AF_INET;
+    serverAddress.sin_port = htons(8080);
+    serverAddress.sin_addr.s_addr = INADDR_ANY;
+    if(bind(serverSocket,(sockaddr*)&serverAddress,sizeof(serverAddress)) == SOCKET_ERROR){
+        cout<<"Bind failed"<<endl;
+        return false;
+    }
+    cout<<"Bind successfully"<<endl;
     return true;
 }

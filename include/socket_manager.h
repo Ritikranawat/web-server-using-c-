@@ -9,4 +9,5 @@ class SocketManager{
     public:
     bool initialize();
     bool createSocket();
+    bool bindSocket();
 };

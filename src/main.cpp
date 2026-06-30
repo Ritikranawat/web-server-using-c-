@@ -7,5 +7,8 @@ int main(){
     if(!server.createSocket()){
         return 1;
     }
+    if(!server.bindSocket()){
+        return 1;
+    }
     return 0 ;
 }
