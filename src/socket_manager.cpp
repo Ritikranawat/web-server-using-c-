@@ -35,3 +35,11 @@ bool SocketManager :: bindSocket(){
     cout<<"Bind successfully"<<endl;
     return true;
 }
+bool SocketManager :: startListening(){
+    if(listen(serverSocket,SOMAXCONN)==SOCKET_ERROR){
+        cout<<"Listen failed"<<endl;
+        return false;
+    }
+    cout<<"server is listening"<<endl;
+    return true;
+}

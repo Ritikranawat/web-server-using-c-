@@ -10,5 +10,8 @@ int main(){
     if(!server.bindSocket()){
         return 1;
     }
-    return 0 ;
+    if(!server.startListening()){
+        return 1;
+    }
+    return 0;
 }
