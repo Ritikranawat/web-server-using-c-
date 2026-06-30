@@ -5,7 +5,7 @@
 #pragma comment(lib, "ws2_32.lib")
 class SocketManager{
     private: 
-    SOCKET SocketManager;
+    SOCKET serverSocket;
     public:
     bool initialize();
     bool createSocket();
