@@ -43,3 +43,16 @@ bool SocketManager :: startListening(){
     cout<<"server is listening"<<endl;
     return true;
 }
+bool SocketManager :: acceptClient(){
+    SOCKET clientSocket;
+    sockaddr_in clientAddress;
+    int clientSize = sizeof(clientAddress);
+    clientSocket = accept(serverSocket , (sockaddr*)&clientAddress,&clientSize);
+    if(clientSocket == INVALID_SOCKET){
+        cout<<"Accept failed"<<endl;
+        return false;
+    }
+    cout<<"Client accepted successfully "<<endl;
+    closesocket(clientSocket);
+    return true;
+}
