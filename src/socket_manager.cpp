@@ -54,12 +54,14 @@ bool SocketManager :: acceptClient(){
     }
     cout<<"Client accepted successfully "<<endl;
     receiveRequest(clientSocket);
+    sendResponse(clientSocket);
+    shutdown(clientSocket , SD_SEND);
     closesocket(clientSocket);
     return true;
 }
 bool SocketManager :: receiveRequest(SOCKET clientSocket){
     char buffer[4096];
-    int bytesReceived = recv(clientSocket,buffer,sizeof(buffer-1),0);
+    int bytesReceived = recv(clientSocket,buffer,sizeof(buffer)-1,0);
     if(bytesReceived == SOCKET_ERROR){
         cout<<"Receive failed"<<endl;
         return false;
@@ -67,5 +69,18 @@ bool SocketManager :: receiveRequest(SOCKET clientSocket){
     buffer[bytesReceived] = '\0';
     cout<< "HTTP Request :\n";
     cout<<buffer<<endl;
+    return true;
+}
+bool SocketManager :: sendResponse(SOCKET clientSocket){
+    string body = "<html><h1>HELLO WORLD</h1></html>";
+    string response =
+    "HTTP/1.1 200 OK\r\n"
+    "Content-Type: text/html\r\n"
+    "Content-Length: " + to_string(body.length()) + "\r\n"
+    "Connection: close\r\n"
+    "\r\n" +
+    body;
+    int result = send(clientSocket,response.c_str(),response.length(),0);
+    cout<<"bytes sent "<<result<<endl;
     return true;
 }

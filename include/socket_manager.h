@@ -13,4 +13,5 @@ class SocketManager{
     bool startListening();
     bool acceptClient();
     bool receiveRequest(SOCKET clientSocket);
+    bool sendResponse(SOCKET clientSocket);
 };
