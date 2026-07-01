@@ -53,6 +53,19 @@ bool SocketManager :: acceptClient(){
         return false;
     }
     cout<<"Client accepted successfully "<<endl;
+    receiveRequest(clientSocket);
     closesocket(clientSocket);
+    return true;
+}
+bool SocketManager :: receiveRequest(SOCKET clientSocket){
+    char buffer[4096];
+    int bytesReceived = recv(clientSocket,buffer,sizeof(buffer-1),0);
+    if(bytesReceived == SOCKET_ERROR){
+        cout<<"Receive failed"<<endl;
+        return false;
+    }
+    buffer[bytesReceived] = '\0';
+    cout<< "HTTP Request :\n";
+    cout<<buffer<<endl;
     return true;
 }
