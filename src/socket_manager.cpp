@@ -1,5 +1,7 @@
-using namespace std;
+#include<fstream>
+#include<sstream>
 # include "../include/socket_manager.h"
+using namespace std;
 bool SocketManager :: initialize(){
     WSADATA wsaData;
     int result = WSAStartup(MAKEWORD(2,2),&wsaData);
@@ -67,12 +69,40 @@ bool SocketManager :: receiveRequest(SOCKET clientSocket){
         return false;
     }
     buffer[bytesReceived] = '\0';
+    string request(buffer);
+    cout<<"reached parser"<<endl;
+    size_t lineEnd = request.find("\r\n");
+    string requestLine = request.substr(0,lineEnd);
+    istringstream iss(requestLine);
+    string method , path,version;
+    iss>>method>>path>>version;
+    cout<<"path :  "<<path<<endl;
+    requestPath = path;
     cout<< "HTTP Request :\n";
     cout<<buffer<<endl;
     return true;
 }
 bool SocketManager :: sendResponse(SOCKET clientSocket){
-    string body = "<html><h1>HELLO WORLD</h1></html>";
+    string filename;
+    if(requestPath=="/"){
+        filename = "public/index.html";
+    }
+    else if (requestPath=="/about"){
+        filename = "public/about.html";
+    }
+    else{
+        string body = "<html><body><h1>404 Not Found</h1></body></html>";
+        return false;
+    }
+    cout<<"opening "<<filename;
+    ifstream file(filename);
+    if(!file){
+        cerr<<"could not open index.html\n";
+        return false;
+    }
+    stringstream ss;
+    ss << file.rdbuf();
+    string body = ss.str();
     string response =
     "HTTP/1.1 200 OK\r\n"
     "Content-Type: text/html\r\n"

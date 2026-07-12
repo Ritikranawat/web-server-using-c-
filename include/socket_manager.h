@@ -2,10 +2,13 @@
 #include<winsock2.h>
 #include<ws2tcpip.h>
 #include<iostream>
+#include<string>
+using namespace std;
 #pragma comment(lib, "ws2_32.lib")
 class SocketManager{
     private: 
     SOCKET serverSocket;
+    string requestPath;
     public:
     bool initialize();
     bool createSocket();

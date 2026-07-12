@@ -1,4 +1,6 @@
 # include "../include/socket_manager.h"
+#include <iostream>
+using namespace std;
 int main(){
     SocketManager server;
     if(!server.initialize()){
