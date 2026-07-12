@@ -90,9 +90,11 @@ bool SocketManager :: sendResponse(SOCKET clientSocket){
     else if (requestPath=="/about"){
         filename = "public/about.html";
     }
+    else if (filename == "/style.css"){
+        filename = "public/style.css";
+    }
     else{
-        string body = "<html><body><h1>404 Not Found</h1></body></html>";
-        return false;
+        filename = "public/404.html";
     }
     cout<<"opening "<<filename;
     ifstream file(filename);
