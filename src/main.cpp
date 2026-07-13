@@ -1,22 +1,28 @@
-# include "../include/socket_manager.h"
+#include "../include/socket_manager.h"
 #include <iostream>
 using namespace std;
-int main(){
+int main()
+{
     SocketManager server;
-    if(!server.initialize()){
+    if (!server.initialize())
+    {
         return 1;
     }
-    if(!server.createSocket()){
+    if (!server.createSocket())
+    {
         return 1;
     }
-    if(!server.bindSocket()){
+    if (!server.bindSocket())
+    {
         return 1;
     }
-    if(!server.startListening()){
+    if (!server.startListening())
+    {
         return 1;
     }
-    if(!server.acceptClient()){
-        return 1;
+    while (server.acceptClient())
+    {
+        server.acceptClient();
     }
     return 0;
 }

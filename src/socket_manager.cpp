@@ -90,7 +90,7 @@ bool SocketManager :: sendResponse(SOCKET clientSocket){
     else if (requestPath=="/about"){
         filename = "public/about.html";
     }
-    else if (filename == "/style.css"){
+    else if (requestPath == "/style.css"){
         filename = "public/style.css";
     }
     else{
@@ -102,16 +102,20 @@ bool SocketManager :: sendResponse(SOCKET clientSocket){
         cerr<<"could not open index.html\n";
         return false;
     }
+    string contentType = "text/html";
+    if(filename.size()>=4 && filename.substr(filename.size()-4)==".css"){
+        contentType="text/css";
+    }
     stringstream ss;
     ss << file.rdbuf();
     string body = ss.str();
-    string response =
-    "HTTP/1.1 200 OK\r\n"
-    "Content-Type: text/html\r\n"
-    "Content-Length: " + to_string(body.length()) + "\r\n"
-    "Connection: close\r\n"
-    "\r\n" +
-    body;
+    string response ="HTTP/1.1 200 OK\r\n";
+    response+="Content-type: "+contentType+" \r\n";
+    response+="Content-length: " + to_string(body.length()) + "\r\n";
+    response+= "Connection: close\r\n";
+    response+= "\r\n";
+    response+=body;
+    cout<<response<<endl;
     int result = send(clientSocket,response.c_str(),response.length(),0);
     cout<<"bytes sent "<<result<<endl;
     return true;
