@@ -96,17 +96,10 @@ bool SocketManager :: sendResponse(SOCKET clientSocket){
     if(requestPath=="/"){
         filename = "public/index.html";
     }
-    else if (requestPath=="/about"){
-        filename = "public/about.html";
-    }
-    else if (requestPath == "/style.css"){
-        filename = "public/style.css";
-    }
     else{
-        filename = "public/404.html";
+        filename = "public"+requestPath;
     }
-    cout<<"opening "<<filename;
-    ifstream file(filename);
+    ifstream file(filename , ios::binary);
     if(!file){
         cerr<<"could not open index.html\n";
         return false;
