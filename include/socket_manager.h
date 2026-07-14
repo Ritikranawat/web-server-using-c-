@@ -16,6 +16,7 @@ class SocketManager{
     bool startListening();
     bool acceptClient();
     bool receiveRequest(SOCKET clientSocket);
+    void log(const string & message);
     bool sendResponse(SOCKET clientSocket);
     string getContentType(string &filename);
 };

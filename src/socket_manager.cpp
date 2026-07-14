@@ -11,6 +11,10 @@ string SocketManager:: getContentType(string & filename){
     if(filename.size()>=5 && filename.substr(filename.size()-5)==".jpeg") return "image/jpeg";
     return "application/octet-stream";
 }
+void SocketManager :: log(const string &message){
+    cout<<"[INFO]"<<message<<endl;
+    return;
+}
 bool SocketManager :: initialize(){
     WSADATA wsaData;
     int result = WSAStartup(MAKEWORD(2,2),&wsaData);
@@ -63,7 +67,7 @@ bool SocketManager :: acceptClient(){
         cout<<"Accept failed"<<endl;
         return false;
     }
-    cout<<"Client accepted successfully "<<endl;
+    log("client accepted");
     receiveRequest(clientSocket);
     sendResponse(clientSocket);
     shutdown(clientSocket , SD_SEND);
@@ -79,16 +83,26 @@ bool SocketManager :: receiveRequest(SOCKET clientSocket){
     }
     buffer[bytesReceived] = '\0';
     string request(buffer);
-    cout<<"reached parser"<<endl;
+    size_t bodypos = request.find("\r\n\r\n");
+    if(bodypos!=string::npos){
+        string body = request.substr(bodypos + 4);
+        size_t equalpos = body.find("=");
+        if(equalpos!=string::npos){
+            string username = body.substr(equalpos+1);
+            cout<<"username : "<<username<<endl;
+        }
+        cout<<"Body :"<<body<<endl;
+    }
     size_t lineEnd = request.find("\r\n");
     string requestLine = request.substr(0,lineEnd);
     istringstream iss(requestLine);
     string method , path,version;
     iss>>method>>path>>version;
-    cout<<"path :  "<<path<<endl;
     requestPath = path;
-    cout<< "HTTP Request :\n";
-    cout<<buffer<<endl;
+    log("Received request"+requestPath);
+    cout<<"Method :"<<method<<endl;
+    cout<<"Path :"<<path<<endl;
+    cout<<"Version :"<<version<<endl;
     return true;
 }
 bool SocketManager :: sendResponse(SOCKET clientSocket){
@@ -114,7 +128,7 @@ bool SocketManager :: sendResponse(SOCKET clientSocket){
     response+= "Connection: close\r\n";
     response+= "\r\n";
     response+=body;
-    cout<<response<<endl;
+    log("Response sent");
     int result = send(clientSocket,response.c_str(),response.length(),0);
     cout<<"bytes sent "<<result<<endl;
     return true;
