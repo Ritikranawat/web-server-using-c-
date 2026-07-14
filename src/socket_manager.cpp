@@ -2,6 +2,15 @@
 #include<sstream>
 # include "../include/socket_manager.h"
 using namespace std;
+string SocketManager:: getContentType(string & filename){
+    if(filename.size()>=5 && filename.substr(filename.size()-5)==".html") return "text/html";
+    if(filename.size()>=4 && filename.substr(filename.size()-4)==".css") return "text/css";
+    if(filename.size()>=3 && filename.substr(filename.size()-3)==".js") return "application/javascript";
+    if(filename.size()>=4 && filename.substr(filename.size()-4)==".png") return "image/png";
+    if(filename.size()>=4 && filename.substr(filename.size()-4)==".jpg") return "image/jpeg";
+    if(filename.size()>=5 && filename.substr(filename.size()-5)==".jpeg") return "image/jpeg";
+    return "application/octet-stream";
+}
 bool SocketManager :: initialize(){
     WSADATA wsaData;
     int result = WSAStartup(MAKEWORD(2,2),&wsaData);
@@ -102,10 +111,7 @@ bool SocketManager :: sendResponse(SOCKET clientSocket){
         cerr<<"could not open index.html\n";
         return false;
     }
-    string contentType = "text/html";
-    if(filename.size()>=4 && filename.substr(filename.size()-4)==".css"){
-        contentType="text/css";
-    }
+    string contentType = getContentType(filename);
     stringstream ss;
     ss << file.rdbuf();
     string body = ss.str();
