@@ -1,6 +1,8 @@
 #include<fstream>
 #include<sstream>
 # include "../include/socket_manager.h"
+# include "../include/file_manager.h"
+# include "../include/router.h"
 using namespace std;
 string SocketManager:: getContentType(string & filename){
     if(filename.size()>=5 && filename.substr(filename.size()-5)==".html") return "text/html";
@@ -106,22 +108,25 @@ bool SocketManager :: receiveRequest(SOCKET clientSocket){
     return true;
 }
 bool SocketManager :: sendResponse(SOCKET clientSocket){
-    string filename;
-    if(requestPath=="/"){
-        filename = "public/index.html";
-    }
-    else{
-        filename = "public"+requestPath;
-    }
+    string filename = router::getFilePath(requestPath);
     ifstream file(filename , ios::binary);
+    if(!file){
+        file.clear();
+        filename="public/404.html";
+        file.open(filename,ios::binary);
     if(!file){
         cerr<<"could not open index.html\n";
         return false;
     }
+}
+    string body;
+    if(!fileManager::readFile(filename,body)){
+        filename="public/404.html";
+        if(!fileManager::readFile(filename,body)){
+            return false;
+        }
+    }
     string contentType = getContentType(filename);
-    stringstream ss;
-    ss << file.rdbuf();
-    string body = ss.str();
     string response ="HTTP/1.1 200 OK\r\n";
     response+="Content-type: "+contentType+" \r\n";
     response+="Content-length: " + to_string(body.length()) + "\r\n";
