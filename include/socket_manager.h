@@ -9,6 +9,8 @@ class SocketManager{
     private: 
     SOCKET serverSocket;
     string requestPath;
+    string username;
+    string requestMethod;
     public:
     bool initialize();
     bool createSocket();
