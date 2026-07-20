@@ -149,7 +149,7 @@ bool SocketManager ::sendResponse(SOCKET clientSocket)
         fileManager::readFile("public/template.html",body);
         size_t pos=body.find("{{username}}");
         if(pos!=string::npos){
-            body.replace(pos,12,username);
+            body.replace(pos,string ("{{username}}").length(),username);
         }
     string response = "HTTP/1.1 200 OK\r\n";
     response += "Content-type: text/html \r\n";
